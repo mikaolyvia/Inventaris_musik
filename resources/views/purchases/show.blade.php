@@ -25,7 +25,7 @@
                 </svg>
                 Print
             </button>
-            @if($purchase->status !== 'cancelled')
+            @if(auth()->user() && auth()->user()->role === 'admin' && $purchase->status !== 'cancelled')
                 <form action="{{ route('purchases.cancel', $purchase) }}" method="POST"
                       onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pembelian ini? Tindakan ini tidak dapat dibatalkan.')">
                     @csrf

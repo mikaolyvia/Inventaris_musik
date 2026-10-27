@@ -75,6 +75,7 @@
                                     </svg>
                                     Edit
                                 </a>
+                                @if(auth()->user() && auth()->user()->role === 'admin')
                                 <form action="{{ route('categories.destroy', $category) }}" method="POST"
                                       onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
                                     @csrf
@@ -87,6 +88,7 @@
                                         Hapus
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

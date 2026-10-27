@@ -32,13 +32,12 @@ Route::middleware('auth')->group(function () {
 
     // Transactions
     Route::resource('purchases', PurchaseController::class)->except(['edit', 'update', 'destroy']);
-    Route::post('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('purchases.cancel');
-
     Route::resource('sales', SaleController::class)->except(['edit', 'update', 'destroy']);
-    Route::post('/sales/{sale}/cancel', [SaleController::class, 'cancel'])->name('sales.cancel');
 
     // Admin Only Routes
     Route::middleware('admin')->group(function () {
         Route::resource('users', UserController::class);
+        Route::post('/purchases/{purchase}/cancel', [PurchaseController::class, 'cancel'])->name('purchases.cancel');
+        Route::post('/sales/{sale}/cancel', [SaleController::class, 'cancel'])->name('sales.cancel');
     });
 });

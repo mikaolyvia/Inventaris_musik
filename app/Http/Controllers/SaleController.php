@@ -136,6 +136,10 @@ class SaleController extends Controller
      */
     public function cancel(Sale $sale)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang diizinkan membatalkan transaksi penjualan.');
+        }
+
         if ($sale->status === 'cancelled') {
             return redirect()->route('sales.show', $sale)
                 ->with('error', 'Penjualan sudah dibatalkan sebelumnya.');

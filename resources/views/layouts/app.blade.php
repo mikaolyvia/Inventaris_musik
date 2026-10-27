@@ -168,12 +168,22 @@
         <!-- Sidebar Footer -->
         <div class="px-4 py-4 border-t border-lavender-800">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-full bg-lavender-700 flex items-center justify-center">
-                    <i class="fas fa-user text-sm text-lavender-200"></i>
+                <div class="w-9 h-9 rounded-full {{ (auth()->user() && auth()->user()->role === 'admin') ? 'bg-red-600' : 'bg-blue-600' }} flex items-center justify-center">
+                    <i class="fas fa-user text-sm text-white"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium truncate">{{ auth()->user()->name ?? 'User' }}</p>
-                    <p class="text-xs text-lavender-400 truncate capitalize">{{ auth()->user()->role ?? 'staff' }}</p>
+                    <div class="mt-0.5">
+                        @if(auth()->user() && auth()->user()->role === 'admin')
+                            <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-red-500 text-white tracking-wider">
+                                ADMIN
+                            </span>
+                        @else
+                            <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-blue-500 text-white tracking-wider">
+                                STAFF
+                            </span>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -201,22 +211,40 @@
                 <div class="relative" id="userDropdownContainer">
                     <button onclick="toggleUserDropdown()"
                             class="flex items-center space-x-3 text-gray-700 hover:text-lavender-600 focus:outline-none transition-colors">
-                        <div class="hidden sm:block text-right">
-                            <p class="text-sm font-medium">{{ auth()->user()->name ?? 'User' }}</p>
-                            <p class="text-xs text-gray-400 capitalize">{{ auth()->user()->role ?? 'staff' }}</p>
+                        <div class="hidden sm:flex items-center space-x-2 text-right">
+                            <span class="text-sm font-semibold text-gray-800">{{ auth()->user()->name ?? 'User' }}</span>
+                            @if(auth()->user() && auth()->user()->role === 'admin')
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 uppercase tracking-wide">
+                                    <i class="fas fa-shield-alt mr-1 text-[10px]"></i> ADMIN
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200 uppercase tracking-wide">
+                                    <i class="fas fa-user mr-1 text-[10px]"></i> STAFF
+                                </span>
+                            @endif
                         </div>
-                        <div class="w-9 h-9 rounded-full bg-lavender-100 flex items-center justify-center">
-                            <i class="fas fa-user text-lavender-600"></i>
+                        <div class="w-9 h-9 rounded-full {{ (auth()->user() && auth()->user()->role === 'admin') ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600' }} flex items-center justify-center font-bold">
+                            <i class="fas fa-user text-sm"></i>
                         </div>
                         <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                     </button>
 
                     <!-- Dropdown Menu -->
                     <div id="userDropdown"
-                         class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                         class="hidden absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                         <div class="px-4 py-3 border-b border-gray-100 sm:hidden">
                             <p class="text-sm font-medium text-gray-800">{{ auth()->user()->name ?? 'User' }}</p>
-                            <p class="text-xs text-gray-400 capitalize">{{ auth()->user()->role ?? 'staff' }}</p>
+                            <div class="mt-1">
+                                @if(auth()->user() && auth()->user()->role === 'admin')
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 uppercase">
+                                        ADMIN
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200 uppercase">
+                                        STAFF
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                         <a href="{{ route('dashboard') }}"
                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-lavender-50 hover:text-lavender-600 transition-colors">

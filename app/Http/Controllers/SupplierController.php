@@ -80,6 +80,10 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang diizinkan menghapus data supplier.');
+        }
+
         if ($supplier->purchases()->count() > 0) {
             return redirect()->route('suppliers.index')
                 ->with('error', 'Supplier tidak dapat dihapus karena masih memiliki data pembelian.');

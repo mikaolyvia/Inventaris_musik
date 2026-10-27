@@ -133,6 +133,10 @@ class PurchaseController extends Controller
      */
     public function cancel(Purchase $purchase)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang diizinkan membatalkan transaksi pembelian.');
+        }
+
         if ($purchase->status === 'cancelled') {
             return redirect()->route('purchases.show', $purchase)
                 ->with('error', 'Pembelian sudah dibatalkan sebelumnya.');

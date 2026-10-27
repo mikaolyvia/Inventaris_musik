@@ -127,6 +127,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang diizinkan menghapus data produk.');
+        }
+
         // Check if product has sale items or purchase items
         if ($product->saleItems()->count() > 0 || $product->purchaseItems()->count() > 0) {
             return redirect()->route('products.index')

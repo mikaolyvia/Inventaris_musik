@@ -221,4 +221,64 @@ class InventorySalesSystemTest extends TestCase
         $loginResponse->assertRedirect('/dashboard');
         $this->assertAuthenticatedAs($this->staff);
     }
+
+    public function test_staff_cannot_delete_product(): void
+    {
+        $response = $this->actingAs($this->staff)->delete("/products/{$this->product->id}");
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('products', ['id' => $this->product->id]);
+    }
+
+    public function test_admin_can_delete_product_without_transactions(): void
+    {
+        $unusedProduct = Product::create([
+            'category_id' => $this->category->id,
+            'sku' => 'MUS-UNUSED',
+            'name' => 'Produk Tanpa Transaksi',
+            'purchase_price' => 100000,
+            'selling_price' => 150000,
+            'stock' => 5,
+            'minimum_stock' => 1,
+        ]);
+
+        $response = $this->actingAs($this->admin)->delete("/products/{$unusedProduct->id}");
+        $response->assertRedirect('/products');
+        $this->assertSoftDeleted('products', ['id' => $unusedProduct->id]);
+    }
+
+    public function test_staff_cannot_delete_category(): void
+    {
+        $response = $this->actingAs($this->staff)->delete("/categories/{$this->category->id}");
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('categories', ['id' => $this->category->id]);
+    }
+
+    public function test_staff_cannot_delete_supplier(): void
+    {
+        $response = $this->actingAs($this->staff)->delete("/suppliers/{$this->supplier->id}");
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('suppliers', ['id' => $this->supplier->id]);
+    }
+
+    public function test_staff_cannot_cancel_sale(): void
+    {
+        $this->actingAs($this->staff)->post('/sales', [
+            'customer_name' => 'Test Pelanggan',
+            'items' => [
+                [
+                    'product_id' => $this->product->id,
+                    'quantity' => 1,
+                ],
+            ],
+        ]);
+
+        $sale = Sale::latest()->first();
+
+        // Staff tries to cancel
+        $response = $this->actingAs($this->staff)->post("/sales/{$sale->id}/cancel");
+        $response->assertStatus(403);
+
+        $sale->refresh();
+        $this->assertEquals('completed', $sale->status);
+    }
 }

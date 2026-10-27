@@ -76,6 +76,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya Admin yang diizinkan menghapus kategori.');
+        }
+
         if ($category->products()->count() > 0) {
             return redirect()->route('categories.index')
                 ->with('error', 'Kategori tidak dapat dihapus karena masih memiliki produk.');

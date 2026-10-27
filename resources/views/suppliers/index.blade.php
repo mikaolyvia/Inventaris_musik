@@ -83,6 +83,7 @@
                                    class="inline-flex items-center px-2.5 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-semibold rounded-lg transition">
                                     <i class="fas fa-edit mr-1"></i> Edit
                                 </a>
+                                @if(auth()->user() && auth()->user()->role === 'admin')
                                 <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST"
                                       onsubmit="return confirm('Yakin ingin menghapus supplier ini?')">
                                     @csrf @method('DELETE')
@@ -91,6 +92,7 @@
                                         <i class="fas fa-trash mr-1"></i> Hapus
                                     </button>
                                 </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

@@ -109,7 +109,7 @@
                                         </svg>
                                         Detail
                                     </a>
-                                    @if($sale->status !== 'cancelled')
+                                    @if(auth()->user() && auth()->user()->role === 'admin' && $sale->status !== 'cancelled')
                                         <form action="{{ route('sales.cancel', $sale) }}" method="POST"
                                               onsubmit="return confirm('Apakah Anda yakin ingin membatalkan penjualan ini?')">
                                             @csrf
