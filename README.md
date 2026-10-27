@@ -62,7 +62,7 @@ Akses aplikasi di: http://localhost:8000
 | Role  | Email            | Password |
 |-------|------------------|----------|
 | Admin | admin@admin.com  | password |
-| Staff | staff@admin.com  | password |
+| Staff | staff@admin.com  | staff123 |
 
 ## 🏗️ Features
 
